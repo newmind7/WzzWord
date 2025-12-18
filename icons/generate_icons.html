@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Generate VocabMeld Icons</title>
+  <title>Generate WzzWord Icons</title>
   <style>
     body { font-family: -apple-system, sans-serif; padding: 40px; background: #1e293b; color: white; }
     h1 { margin-bottom: 10px; }
     p { color: #94a3b8; margin-bottom: 30px; }
+    .source-preview { display: flex; align-items: center; gap: 16px; margin-bottom: 30px; flex-wrap: wrap; }
+    .source-preview img { width: 120px; height: 120px; object-fit: cover; border-radius: 12px; border: 1px solid #334155; background: #0f172a; }
+    .source-preview .source-meta { display: flex; flex-direction: column; gap: 8px; }
+    .error { color: #fecaca; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); padding: 12px 14px; border-radius: 10px; display: none; }
+    .warn { color: #fde68a; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); padding: 12px 14px; border-radius: 10px; display: none; }
     .icon-grid { display: flex; gap: 30px; flex-wrap: wrap; margin-bottom: 30px; }
     .icon-item { text-align: center; }
     .icon-item p { margin-top: 10px; font-size: 14px; }
@@ -21,6 +26,10 @@
       font-weight: 500;
     }
     button:hover { opacity: 0.9; }
+    .btn-secondary {
+      background: #334155;
+      border: 1px solid #475569;
+    }
     .instructions {
       margin-top: 40px;
       padding: 20px;
@@ -34,8 +43,21 @@
   </style>
 </head>
 <body>
-  <h1>🎨 VocabMeld Icon Generator</h1>
-  <p>生成 Chrome 扩展所需的各尺寸图标</p>
+  <h1>🎨 WzzWord Icon Generator</h1>
+  <p>使用本目录下的 <code>iocn.jpg</code> 生成 Chrome 扩展所需的各尺寸图标</p>
+
+  <div class="source-preview">
+    <img id="sourcePreview" src="iocn.jpg" alt="Source Image">
+    <div class="source-meta">
+      <div>源图：<code>icons/iocn.jpg</code></div>
+      <div class="warn" id="fileProtocolWarn"></div>
+      <div class="error" id="loadError"></div>
+      <div>
+        <button class="btn-secondary" id="pickFileBtn" type="button">选择图片（推荐）</button>
+        <input id="fileInput" type="file" accept="image/*" style="display:none" />
+      </div>
+    </div>
+  </div>
   
   <div class="icon-grid" id="iconGrid"></div>
   
@@ -53,114 +75,108 @@
   <script>
     const sizes = [16, 32, 48, 128];
     const iconGrid = document.getElementById('iconGrid');
-    
-    function drawIcon(ctx, size) {
-      const scale = size / 128;
-      
-      // 清除画布
-      ctx.clearRect(0, 0, size, size);
-      
-      // 渐变背景
-      const gradient = ctx.createLinearGradient(0, 0, size, size);
-      gradient.addColorStop(0, '#6366f1');
-      gradient.addColorStop(0.5, '#8b5cf6');
-      gradient.addColorStop(1, '#a855f7');
-      
-      // 绘制圆形背景
-      ctx.beginPath();
-      ctx.arc(size/2, size/2, size/2 - 2*scale, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-      
-      // 内部光晕
-      ctx.beginPath();
-      ctx.arc(size/2, size/2, size/2 - 8*scale, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 2 * scale;
-      ctx.stroke();
-      
-      // 创建文字渐变
-      const textGradient = ctx.createLinearGradient(20*scale, 0, 108*scale, 0);
-      textGradient.addColorStop(0, '#fef3c7');
-      textGradient.addColorStop(1, '#fcd34d');
-      
-      // 绘制 V 字母
-      ctx.strokeStyle = textGradient;
-      ctx.lineWidth = Math.max(2, 6 * scale);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      
-      ctx.beginPath();
-      ctx.moveTo(28 * scale, 32 * scale);
-      ctx.lineTo(50 * scale, 78 * scale);
-      ctx.lineTo(64 * scale, 56 * scale);
-      ctx.lineTo(78 * scale, 78 * scale);
-      ctx.lineTo(100 * scale, 32 * scale);
-      ctx.stroke();
-      
-      // 绘制 M 字母（仅在大尺寸显示）
-      if (size >= 32) {
-        ctx.lineWidth = Math.max(1.5, 4 * scale);
-        ctx.beginPath();
-        ctx.moveTo(46 * scale, 94 * scale);
-        ctx.lineTo(46 * scale, 78 * scale);
-        ctx.lineTo(60 * scale, 88 * scale);
-        ctx.lineTo(74 * scale, 78 * scale);
-        ctx.lineTo(74 * scale, 94 * scale);
-        ctx.stroke();
-      }
-      
-      // 星点装饰（仅在大尺寸显示）
-      if (size >= 48) {
-        ctx.fillStyle = '#fef3c7';
-        ctx.globalAlpha = 0.8;
-        ctx.beginPath();
-        ctx.arc(98 * scale, 26 * scale, 3 * scale, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.globalAlpha = 0.6;
-        ctx.beginPath();
-        ctx.arc(26 * scale, 48 * scale, 2 * scale, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.globalAlpha = 0.7;
-        ctx.beginPath();
-        ctx.arc(100 * scale, 68 * scale, 2.5 * scale, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.globalAlpha = 1;
-      }
+    const sourcePath = 'iocn.jpg';
+    const sourcePreview = document.getElementById('sourcePreview');
+    const loadError = document.getElementById('loadError');
+    const fileProtocolWarn = document.getElementById('fileProtocolWarn');
+    const pickFileBtn = document.getElementById('pickFileBtn');
+    const fileInput = document.getElementById('fileInput');
+    const sourceImg = new Image();
+    sourceImg.src = sourcePath;
+
+    if (location.protocol === 'file:') {
+      fileProtocolWarn.textContent = '你正在通过 file:// 打开页面，浏览器可能会阻止 Canvas 导出。建议点击“选择图片（推荐）”重新选择同一张图片后再下载，或用本地服务器方式打开该页面。';
+      fileProtocolWarn.style.display = 'block';
     }
     
-    // 生成所有尺寸的图标
-    sizes.forEach(size => {
-      const item = document.createElement('div');
-      item.className = 'icon-item';
-      
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      canvas.id = 'icon' + size;
-      
-      const ctx = canvas.getContext('2d');
-      drawIcon(ctx, size);
-      
-      const label = document.createElement('p');
-      label.textContent = size + ' × ' + size;
-      
-      item.appendChild(canvas);
-      item.appendChild(label);
-      iconGrid.appendChild(item);
+    function drawImageCover(ctx, img, size) {
+      ctx.clearRect(0, 0, size, size);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      const imgW = img.naturalWidth || img.width;
+      const imgH = img.naturalHeight || img.height;
+      if (!imgW || !imgH) return;
+
+      const scale = Math.max(size / imgW, size / imgH);
+      const drawW = imgW * scale;
+      const drawH = imgH * scale;
+      const dx = (size - drawW) / 2;
+      const dy = (size - drawH) / 2;
+      ctx.drawImage(img, dx, dy, drawW, drawH);
+    }
+
+    function renderAll() {
+      iconGrid.innerHTML = '';
+
+      sizes.forEach(size => {
+        const item = document.createElement('div');
+        item.className = 'icon-item';
+
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        canvas.id = 'icon' + size;
+
+        const ctx = canvas.getContext('2d');
+        drawImageCover(ctx, sourceImg, size);
+
+        const label = document.createElement('p');
+        label.textContent = size + ' × ' + size;
+
+        item.appendChild(canvas);
+        item.appendChild(label);
+        iconGrid.appendChild(item);
+      });
+    }
+    
+    sourceImg.onload = () => {
+      loadError.style.display = 'none';
+      renderAll();
+    };
+
+    sourceImg.onerror = () => {
+      loadError.textContent = `图片加载失败：${sourcePath}。请确认该文件存在于本 HTML 同目录（icons/）下。`;
+      loadError.style.display = 'block';
+      if (sourcePreview) sourcePreview.style.display = 'none';
+    };
+
+    pickFileBtn.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        sourceImg.src = dataUrl;
+        if (sourcePreview) sourcePreview.src = dataUrl;
+      };
+      reader.onerror = () => {
+        loadError.textContent = '读取图片失败，请重试或更换图片文件。';
+        loadError.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
     });
     
     function downloadAll() {
+      if (!sourceImg.complete || !sourceImg.naturalWidth) {
+        return;
+      }
       sizes.forEach((size, index) => {
         setTimeout(() => {
           const canvas = document.getElementById('icon' + size);
           const link = document.createElement('a');
           link.download = 'icon' + size + '.png';
-          link.href = canvas.toDataURL('image/png');
-          link.click();
+          try {
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+          } catch (e) {
+            alert('下载失败：浏览器阻止了 Canvas 导出（Tainted canvas）。\n\n解决方案：\n1) 点击“选择图片（推荐）”，重新选择 icons/iocn.jpg（或任意图片）后再下载；\n2) 或者使用本地服务器方式打开该 HTML（不要用 file:// 直接打开）。');
+          }
         }, index * 200);
       });
     }

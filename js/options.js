@@ -1,5 +1,5 @@
 /**
- * VocabMeld Options 脚本 - 自动保存版本
+ * WzzWord Options 脚本 - 自动保存版本
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -677,9 +677,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
       await chrome.storage.sync.set(settings);
-      console.log('[VocabMeld] Settings saved automatically');
+      console.log('[WzzWord] Settings saved automatically');
     } catch (error) {
-      console.error('[VocabMeld] Failed to save settings:', error);
+      console.error('[WzzWord] Failed to save settings:', error);
     }
   }
 

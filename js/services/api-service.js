@@ -1,5 +1,5 @@
 /**
- * VocabMeld API 服务模块
+ * WzzWord API 服务模块
  * 处理与 LLM API 的通信
  */
 
@@ -288,7 +288,7 @@ ${filteredText}
       return mergedResults.slice(0, maxReplacements);
 
     } catch (error) {
-      console.error('[VocabMeld] API Error:', error);
+      console.error('[WzzWord] API Error:', error);
       throw error;
     }
   }
@@ -375,7 +375,7 @@ ${filteredText}
         try {
           return JSON.parse(jsonMatch[0]);
         } catch (e2) {
-          console.error('[VocabMeld] Failed to parse API response:', e2);
+          console.error('[WzzWord] Failed to parse API response:', e2);
         }
       }
       return [];

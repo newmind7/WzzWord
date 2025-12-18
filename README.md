@@ -1,7 +1,7 @@
-# VocabMeld - 沉浸式语言学习 Chrome 插件
+# WzzWord - 沉浸式语言学习 Chrome 插件
 
 <p align="center">
-  <img src="icons/icon.svg" width="128" height="128" alt="VocabMeld Logo">
+  <img src="icons/icon.svg" width="128" height="128" alt="WzzWord Logo">
 </p>
 
 <p align="center">
@@ -10,14 +10,14 @@
 </p>
 
 <p align="center">
-  <img src="assets/preview.png" alt="VocabMeld Preview" width="100%">
+  <img src="assets/preview.png" alt="WzzWord Preview" width="100%">
 </p>
 
 ---
 
 ## 核心设计理念
 
-VocabMeld 基于语言学家 Stephen Krashen 的「**可理解性输入 (Comprehensible Input)**」理论设计：
+WzzWord 基于语言学家 Stephen Krashen 的「**可理解性输入 (Comprehensible Input)**」理论设计：
 
 > 语言习得发生在我们理解比当前水平稍高一点的输入时 (i+1)
 
@@ -30,7 +30,7 @@ VocabMeld 基于语言学家 Stephen Krashen 的「**可理解性输入 (Compreh
 
 ## 项目灵感与致敬
 
-VocabMeld 从以下优秀项目中汲取灵感，并在多个维度上进行了显著改进：
+WzzWord 从以下优秀项目中汲取灵感，并在多个维度上进行了显著改进：
 
 ### 参考项目对比
 
@@ -56,7 +56,7 @@ VocabMeld 从以下优秀项目中汲取灵感，并在多个维度上进行了�
 1. 打开 Chrome 浏览器，访问 `chrome://extensions/`
 2. 开启右上角的"开发者模式"
 3. 点击"加载已解压的扩展程序"
-4. 选择 `VocabMeld` 文件夹
+4. 选择 `WzzWord` 文件夹
 
 ### 2. 配置 API
 
@@ -294,7 +294,7 @@ LLM 根据以下规则选择替换词汇：
 ## 项目结构
 
 ```
-VocabMeld/
+WzzWord/
 ├── _locales/               # 国际化文件
 │   ├── en/
 │   │   └── messages.json
@@ -389,17 +389,3 @@ function isDifficultyCompatible(wordDifficulty, userDifficulty) {
 2. 或使用扩展开发工具的热重载功能
 
 ---
-
-## 打赏
-
-万水千山总是情，一块几块都是情。本软件完全开源，用爱发电，如果你愿意，可以以打赏的方式支持我一下：
-
-<p align="center">
-  <img src="assets/wechat.jpg" alt="微信打赏" width="300">
-</p>
-
----
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=lzskyline/VocabMeld&type=Date)](https://star-history.com/#lzskyline/VocabMeld&Date)

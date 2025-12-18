@@ -1,5 +1,5 @@
 /**
- * VocabMeld 文本替换器模块
+ * WzzWord 文本替换器模块
  * 使用 Range API 精确替换文本节点
  */
 
@@ -133,7 +133,7 @@ class TextReplacer {
 
       return true;
     } catch (error) {
-      console.error('[VocabMeld] Replacement error:', error);
+      console.error('[WzzWord] Replacement error:', error);
       return false;
     }
   }

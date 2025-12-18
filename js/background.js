@@ -1,11 +1,11 @@
 /**
- * VocabMeld 后台脚本
+ * WzzWord 后台脚本
  * 处理扩展级别的事件和消息
  */
 
 // 安装/更新时初始化
 chrome.runtime.onInstalled.addListener((details) => {
-  console.log('[VocabMeld] Extension installed/updated:', details.reason);
+  console.log('[WzzWord] Extension installed/updated:', details.reason);
   
   // 设置默认配置
   if (details.reason === 'install') {
@@ -70,7 +70,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
               action: 'processSpecificWords', 
               words: [word] 
             }).catch(err => {
-              console.log('[VocabMeld] Content script not ready, word will be processed on next page load');
+              console.log('[WzzWord] Content script not ready, word will be processed on next page load');
             });
           });
         }
@@ -118,7 +118,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       
       chrome.tts.speak(text, options, () => {
         if (chrome.runtime.lastError) {
-          console.error('[VocabMeld] TTS Error:', chrome.runtime.lastError.message);
+          console.error('[WzzWord] TTS Error:', chrome.runtime.lastError.message);
           sendResponse({ success: false, error: chrome.runtime.lastError.message });
         } else {
           sendResponse({ success: true });
@@ -135,12 +135,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const endpoint = message.endpoint;
         const options = message.options || {};
 
-        console.log('[VocabMeld] apiRequest:', endpoint);
+        console.log('[WzzWord] apiRequest:', endpoint);
 
         const response = await fetch(endpoint, options);
         const text = await response.text();
 
-        console.log('[VocabMeld] apiRequest response:', response.status, response.statusText);
+        console.log('[WzzWord] apiRequest response:', response.status, response.statusText);
 
         let json = null;
         try {
@@ -157,7 +157,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           text
         });
       } catch (error) {
-        console.error('[VocabMeld] apiRequest failed:', error);
+        console.error('[WzzWord] apiRequest failed:', error);
         sendResponse({
           ok: false,
           status: 0,
@@ -299,4 +299,4 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-console.log('[VocabMeld] Background script loaded');
+console.log('[WzzWord] Background script loaded');

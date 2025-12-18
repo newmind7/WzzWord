@@ -1,5 +1,5 @@
 /**
- * VocabMeld 缓存服务模块
+ * WzzWord 缓存服务模块
  * 实现热词缓存系统，支持 LRU 淘汰策略
  */
 
@@ -43,9 +43,9 @@ class CacheService {
         }
         
         this.initialized = true;
-        console.log(`[VocabMeld] Cache initialized with ${this.cache.size} items`);
+        console.log(`[WzzWord] Cache initialized with ${this.cache.size} items`);
       } catch (error) {
-        console.error('[VocabMeld] Failed to initialize cache:', error);
+        console.error('[WzzWord] Failed to initialize cache:', error);
         this.initialized = true;
       }
     })();
@@ -189,7 +189,7 @@ class CacheService {
         [CACHE_CONFIG.storageKey]: data
       });
     } catch (error) {
-      console.error('[VocabMeld] Failed to persist cache:', error);
+      console.error('[WzzWord] Failed to persist cache:', error);
     }
   }
 
@@ -200,7 +200,7 @@ class CacheService {
   async clear() {
     this.cache.clear();
     await storage.removeLocal(CACHE_CONFIG.storageKey);
-    console.log('[VocabMeld] Cache cleared');
+    console.log('[WzzWord] Cache cleared');
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * VocabMeld 内容脚本
+ * WzzWord 内容脚本
  * 注入到网页中，处理词汇替换和用户交互
  */
 
@@ -209,7 +209,7 @@
     return new Promise((resolve, reject) => {
       chrome.storage.local.set({ vocabmeld_word_cache: data }, () => {
         if (chrome.runtime.lastError) {
-          console.error('[VocabMeld] Failed to save cache:', chrome.runtime.lastError);
+          console.error('[WzzWord] Failed to save cache:', chrome.runtime.lastError);
           reject(chrome.runtime.lastError);
         } else {
           resolve();
@@ -255,7 +255,7 @@
 
   async function addToMemorizeList(word) {
     if (!word || !word.trim()) {
-      console.warn('[VocabMeld] Invalid word for memorize list:', word);
+      console.warn('[WzzWord] Invalid word for memorize list:', word);
       return;
     }
 
@@ -292,12 +292,12 @@
             await translateSpecificWords([trimmedWord]);
             showToast(`"${trimmedWord}" 已添加到记忆列表`);
           } catch (error) {
-            console.error('[VocabMeld] Error translating word:', trimmedWord, error);
+            console.error('[WzzWord] Error translating word:', trimmedWord, error);
             showToast(`"${trimmedWord}" 已添加到记忆列表`);
           }
         }
       } catch (error) {
-        console.error('[VocabMeld] Error processing word:', trimmedWord, error);
+        console.error('[WzzWord] Error processing word:', trimmedWord, error);
         showToast(`"${trimmedWord}" 已添加到记忆列表`);
       }
     } else {
@@ -556,7 +556,7 @@
           // 找到匹配后立即跳出，因为DOM结构已改变，需要重新获取节点
           break;
         } catch (e) {
-          console.error('[VocabMeld] Replacement error:', e, original);
+          console.error('[WzzWord] Replacement error:', e, original);
         }
       }
     }
@@ -868,7 +868,7 @@ ${filteredText}
         return mergedResults.slice(0, maxAsyncReplacements);
 
       } catch (error) {
-        console.error('[VocabMeld] Async API Error:', error);
+        console.error('[WzzWord] Async API Error:', error);
         // API失败时返回空数组，不影响已显示的缓存结果
         return [];
       }
@@ -1013,7 +1013,7 @@ ${uncached.join(', ')}
         updateStats({ newWords: apiResults.length, cacheHits: cached.length, cacheMisses: 1 });
 
       } catch (error) {
-        console.error('[VocabMeld] API Error for specific words:', error);
+        console.error('[WzzWord] API Error for specific words:', error);
         // 如果API失败，至少返回缓存的结果
       }
     }
@@ -1206,7 +1206,7 @@ ${uncached.join(', ')}
           const memorizeCount = await processSpecificWords(memorizeWords);
           processed += memorizeCount;
         } catch (e) {
-          console.error('[VocabMeld] Error processing memorize list:', e);
+          console.error('[WzzWord] Error processing memorize list:', e);
           errors++;
         }
       }
@@ -1265,13 +1265,13 @@ ${uncached.join(', ')}
                 }
               }
             }).catch(error => {
-              console.error('[VocabMeld] Async translation error:', error);
+              console.error('[WzzWord] Async translation error:', error);
             });
           }
           
           return { count: immediateCount, error: false };
         } catch (e) {
-          console.error('[VocabMeld] Segment error:', e);
+          console.error('[WzzWord] Segment error:', e);
           return { count: 0, error: true };
         }
       }
@@ -1520,7 +1520,7 @@ ${uncached.join(', ')}
           processSpecificWords(words).then(count => {
             sendResponse({ success: true, count });
           }).catch(error => {
-            console.error('[VocabMeld] Error processing specific words:', error);
+            console.error('[WzzWord] Error processing specific words:', error);
             sendResponse({ success: false, error: error.message });
           });
           return true; // 保持消息通道开放以支持异步响应
