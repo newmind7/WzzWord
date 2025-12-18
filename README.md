@@ -9,10 +9,6 @@
   <sub>基于「可理解性输入」理论，让语言学习融入日常生活</sub>
 </p>
 
-<p align="center">
-  <img src="assets/preview.png" alt="WzzWord Preview" width="100%">
-</p>
-
 ---
 
 ## 核心设计理念
